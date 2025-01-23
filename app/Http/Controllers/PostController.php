@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\Comment;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
@@ -40,6 +41,7 @@ class PostController extends Controller
         'code' => 'required|string|max:255',
         'availability' => 'required|integer',
         'description' => 'required|string',
+        'detail' => 'required|string',
         'price' => 'required|numeric',
         'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048', // Validasi gambar
     ]);
@@ -63,12 +65,36 @@ class PostController extends Controller
         'code' => $request->code,
         'availability' => $request->availability,
         'description' => $request->description,
+        'detail' => $request->detail,
         'price' => $request->price,
         'image' => $imagePath,
     ]);
 
     // Redirect ke halaman lain setelah data disimpan
     return redirect()->route('posts.create')->with('success', 'Product created successfully!')->with('product', $post);
+}
+
+public function storeComment(Request $request, $postId)
+{
+    // Validasi input komentar
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'comment' => 'required|string|max:1000',
+        'rating' => 'required|integer|between:1,5',
+        'enterCode' => 'required|string|max:255'
+    ]);
+
+    // Menyimpan komentar
+    Comment::create([
+        'name' => $request->name,
+        'comment' => $request->comment,
+        'rating' => $request->rating,
+        'enterCode' => $request->enterCode,
+        'post_id' => $postId,
+    ]);
+
+    // Redirect kembali ke halaman detail post
+    return redirect()->route('posts.detail', $postId)->with('success', 'Komentar berhasil disubmit!');
 }
 
      
@@ -79,12 +105,13 @@ class PostController extends Controller
     public function show($id)
     {
         // Cari postingan berdasarkan ID
-        $post = Post::findOrFail($id);
+        $post = Post::with('comments')->findOrFail($id);
     
         // Ambil komentar terkait
-        $comments = $post->comments; // Ini akan mengambil semua komentar terkait dengan post
+        $comments = $post->comments;
     
         // Kirim data ke view
+        $comments = Comment::where('post_id', $post->id)->get();
         return view('posts.detail', compact('post', 'comments'));
     }    
 

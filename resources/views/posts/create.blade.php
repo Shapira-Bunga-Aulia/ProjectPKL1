@@ -24,7 +24,7 @@
 
          <div class="container">
              <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
-                 @csrf <!-- CSRF token untuk keamanan -->
+                 @csrf
      
                  <div class="mb-3">
                      <label for="nameproduct">Name Product:</label>
@@ -49,6 +49,11 @@
                  <div class="mb-3">
                      <label for="description">Description:</label>
                      <textarea name="description" class="form-control" placeholder="Deskripsi Produk..." required></textarea>
+                 </div>
+
+                 <div class="mb-3">
+                    <label for="detail">Detail:</label>
+                    <textarea name="detail" class="form-control" placeholder="Detail Produk..." required></textarea>
                  </div>
      
                  <div class="mb-3">

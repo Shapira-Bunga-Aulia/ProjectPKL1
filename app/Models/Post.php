@@ -14,14 +14,15 @@ class Post extends Model
         'namebrand', 
         'code', 
         'availability', 
-        'description', 
+        'description',
+        'detail', 
         'price', 
         'image',
     ];
 
     public function comments()
     {
-        return $this->hasMany(Comment::class); // Asumsi model Comment ada di folder app/Models
+        return $this->hasMany(Comment::class);
     }
 }
 
