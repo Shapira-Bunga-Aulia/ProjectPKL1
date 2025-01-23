@@ -44,6 +44,67 @@
         .card-footer-buttons i {
             margin-right: 5px;
         }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f2f2f2;
+        }
+
+        @keyframes slide {
+            from {
+                transform: translateX(0)
+            }
+            to {
+                transform: translateX(-100%)
+            }
+        }
+
+        .logos {
+            overflow: hidden;
+            padding: 40px 0;
+            background: white;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .logos:before,
+        .logos:after {
+            position: absolute;
+            top: 0;
+            width: 250px;
+            height: 100%;
+            content: "";
+            z-index: 2;
+        }
+
+        .logos:before {
+            left: 0;
+            background: linear-gradient(to left, rgba(255, 255, 255, 0), white);
+        }
+
+        .logos:after {
+            right: 0;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0), white);
+        }
+
+        .logos:hover .logos-slide {
+            animation-play-state: paused;
+
+        }
+
+        .logos-slide {
+            display: inline-block;
+            animation: 30s slide infinite linear;
+        }
+
+        .logos-slide img {
+            margin: 0 40px;
+        }
     </style>
 
     <div class="mb-3">
@@ -89,4 +150,25 @@
             </div>
         </div>
     </div>
+    {{-- iklan --}}
+    <div class="logos">
+        <div class="logos-slide">
+            <img src="{{ asset('img/KUPO.jpeg')}}">
+            <img src="{{ asset('img/manfrotto.png')}}">
+            <img src="{{ asset('img/gopro.jpg')}}">
+            <img src="{{ asset('img/dji.png')}}">
+            <img src="{{ asset('img/Atomos.jpg')}}">
+            <img src="{{ asset('img/canon.png')}}">
+            <img src="{{ asset('img/Sennheiser.png')}}">
+            <img src="{{ asset('img/tascam.png')}}">
+            <img src="{{ asset('img/rode.png')}}">
+            <img src="{{ asset('img/sony.png')}}">
+        </div>
+    </div>
+
+ <script>
+    var copy = document.querySelector(".logos-slide").cloneNode(true);
+    document.querySelector(".logos").appendChild(copy);
+ </script>
+
 @endsection
