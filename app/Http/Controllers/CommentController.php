@@ -13,17 +13,25 @@ class CommentController extends Controller
         // Validasi input
         $request->validate([
             'comment' => 'required|max:500',
+            'user_id' => 'required|string',
+            'name' => 'required|string',
+            'rating' => 'required',
+            'enterCode' => 'required',
         ]);
 
-        // Temukan post yang bersangkutan
         $post = Post::findOrFail($postId);
 
         // Simpan komentar ke database
         $post->comments()->create([
             'comment' => $request->comment,
+            'post_id' => $postId,
+            'user_id' => $request->user_id,
+            'name' => $request->name,
+            'rating' => $request->rating,
+            'enterCode' => $request->enterCode,
         ]);
 
         // Redirect kembali ke halaman detail post
-        return redirect()->route('posts.detail', $postId)->with('success', 'Komentar berhasil dikirim');
+        return redirect()->route('posts.detail', $postId)->with('success', 'Review berhasil dipost');
     }
 }
