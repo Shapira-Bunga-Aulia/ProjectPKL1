@@ -31,58 +31,58 @@
         }
 
         /* style.css */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
-.breadcrumb {
-    background-color: #f5f5f5;
-    padding: 7px 20px;
-    display: flex;
-    align-items: center;
-    border: 1px solid #ddd;
-}
+        .breadcrumb {
+            background-color: #f5f5f5;
+            padding: 7px 20px;
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+        }
 
-.breadcrumb ul {
-    list-style: none;
-    display: flex;
-    margin: 0;
-    padding: 0;
-}
+        .breadcrumb ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
 
-.breadcrumb ul li {
-    position: relative;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-}
+        .breadcrumb ul li {
+            position: relative;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
 
-.breadcrumb ul li a {
-    text-decoration: none;
-    color: #23a1d1;;
-    padding: 4px 15px; /* Sesuaikan padding agar navbar lebih tinggi */
-    display: inline-block;
-}
+        .breadcrumb ul li a {
+            text-decoration: none;
+            color: #23a1d1;;
+            padding: 4px 15px; /* Sesuaikan padding agar navbar lebih tinggi */
+            display: inline-block;
+        }
 
-.breadcrumb ul li:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    right: -10px; /* Geser panah ke kanan */
-    top: 0;
-    bottom: 0;
-    width: 5px; /* Lebar panah */
-    background: linear-gradient(to right, rgba(255, 255, 255, 0), #ddd);
-    height: 100%;
-    transform: skewX(-45deg);
-    z-index: -2; 
-}
+        .breadcrumb ul li:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            right: -10px; /* Geser panah ke kanan */
+            top: 0;
+            bottom: 0;
+            width: 5px; /* Lebar panah */
+            background: linear-gradient(to right, rgba(255, 255, 255, 0), #ddd);
+            height: 100%;
+            transform: skewX(-45deg);
+            z-index: -2; 
+        }
 
-.breadcrumb ul li a:hover {
-    text-decoration: underline;
-}
+        .breadcrumb ul li a:hover {
+            text-decoration: underline;
+        }
 
     </style>
 </head>
