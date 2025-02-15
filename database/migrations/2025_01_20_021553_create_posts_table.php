@@ -18,8 +18,7 @@ return new class extends Migration
             $table->string('code');
             $table->integer('availability');
             $table->text('description');
-            $table->decimal('price', 10, 2);
-            
+            $table->decimal('price', 10, 2);    
             $table->string('image');
             $table->timestamps();
         });

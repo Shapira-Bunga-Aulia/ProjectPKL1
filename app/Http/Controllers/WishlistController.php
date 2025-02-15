@@ -2,35 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\cr;
-use Illuminate\Support\Facades\Auth;
+// use App\Models\cr;
 use Illuminate\Http\Request;
 
-class LoginController extends Controller
+class WishlistController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-
-     public function loginAuth(Request $request)
-     {
-         $request->validate([
-             'email' => 'required|email',
-             'password' => 'required'
-         ]);
-     
-         $credentials = $request->only(['email', 'password']);
-     
-         if (Auth::attempt($credentials)) {
-             return redirect()->route('home')->with('success', 'Login berhasil!');
-         } else {
-             return redirect()->back()->with('failed', 'Email atau password salah, silakan coba lagi.');
-         }
-     }
-     
     public function index()
     {
-        return view('register');
+        return view ('wishlist');
     }
 
     /**

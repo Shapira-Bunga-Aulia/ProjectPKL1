@@ -2,64 +2,91 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\cr;
+use App\Models\Checkout;
+use App\Models\ShippingMethod;
 use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Menampilkan daftar checkout
     public function index()
     {
-        return view('checkout');
+        // Mengambil semua data checkout beserta relasi dengan shippingMethod dan address
+        $checkouts = Checkout::with('shippingMethod', 'address')->get();
+        return view('checkout', compact('checkouts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Menampilkan form tambah checkout
     public function create()
     {
-        //
+        // Mengambil semua shipping methods
+        $shippingMethods = ShippingMethod::all();
+        return view('checkout', compact('shippingMethods'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    
+
+    // Menyimpan checkout baru
     public function store(Request $request)
     {
-        //
+        // Validasi input dari form
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'recipient_name' => 'required|string',
+            'phone_number' => 'required|string',
+            'address_id' => 'required|exists:addresses,id',  // Menggunakan address_id
+            'total_price' => 'required|numeric',
+            'shipping_method_id' => 'nullable|exists:shipping_methods,id',
+        ]);
+
+        // Membuat checkout baru
+        Checkout::create($request->all());
+
+        // Redirect ke halaman daftar checkout
+        return redirect()->route('checkout')->with('success', 'Checkout berhasil dibuat!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show()
+    // Menampilkan detail checkout
+    public function show($id)
     {
-        //
+        // Mengambil data checkout berdasarkan ID, beserta relasi shippingMethod dan address
+        $checkout = Checkout::with('shippingMethod', 'address')->findOrFail($id);
+        return view('checkouts.show', compact('checkout'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit()
+    // Menampilkan form edit checkout
+    public function edit($id)
     {
-        //
+        // Mengambil data checkout berdasarkan ID dan semua shipping methods
+        $checkout = Checkout::findOrFail($id);
+        $shippingMethods = ShippingMethod::all();
+        return view('checkout',- compact('checkout', 'shippingMethods'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, )
+    // Mengupdate checkout
+    public function update(Request $request, $id)
     {
-        //
+        // Validasi input untuk update
+        $request->validate([
+            'shipping_method_id' => 'nullable|exists:shipping_methods,id',
+        ]);
+
+        // Mengambil data checkout berdasarkan ID
+        $checkout = Checkout::findOrFail($id);
+        $checkout->update($request->all());
+
+        // Redirect ke halaman daftar checkout
+        return redirect()->route('checkouts.index')->with('success', 'Checkout berhasil diperbarui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy()
+    // Menghapus checkout
+    public function destroy($id)
     {
-        //
+        // Mengambil data checkout berdasarkan ID dan menghapusnya
+        $checkout = Checkout::findOrFail($id);
+        $checkout->delete();
+
+        // Redirect ke halaman daftar checkout
+        return redirect()->route('checkouts.index')->with('success', 'Checkout berhasil dihapus!');
     }
 }

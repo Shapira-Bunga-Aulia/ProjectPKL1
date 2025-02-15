@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
-        Schema::table('users', function (Blueprint $table) {
-            //
-            $table->enum('role', ['admin', 'user']);
+        Schema::create('cart', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->date('rental_date');
+            $table->bigInteger('user_id')->nullable();
+            $table->json('posts');
+            $table->timestamps();
         });
     }
 
@@ -23,10 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
-        Schema::table('users', function (Blueprint $table) {
-            //
-            $table->enum('role', ['admin', 'user']);
-        });
+        
     }
 };

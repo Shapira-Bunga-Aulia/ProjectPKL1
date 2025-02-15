@@ -27,9 +27,36 @@ return new class extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['firstname', 'lastname', 'telephone', 'fax', 'address1', 'address2', 'city', 'postcode', 'country']);
+            if (Schema::hasColumn('users', 'firstname')) {
+                $table->dropColumn('firstname');
+            }
+            if (Schema::hasColumn('users', 'lastname')) {
+                $table->dropColumn('lastname');
+            }
+            if (Schema::hasColumn('users', 'telephone')) {
+                $table->dropColumn('telephone');
+            }
+            if (Schema::hasColumn('users', 'fax')) {
+                $table->dropColumn('fax');
+            }
+            if (Schema::hasColumn('users', 'address1')) {
+                $table->dropColumn('address1');
+            }
+            if (Schema::hasColumn('users', 'address2')) {
+                $table->dropColumn('address2');
+            }
+            if (Schema::hasColumn('users', 'city')) {
+                $table->dropColumn('city');
+            }
+            if (Schema::hasColumn('users', 'postcode')) {
+                $table->dropColumn('postcode');
+            }
+            if (Schema::hasColumn('users', 'country')) {
+                $table->dropColumn('country');
+            }
         });
     }
+    
     
     /**
      * Reverse the migrations.

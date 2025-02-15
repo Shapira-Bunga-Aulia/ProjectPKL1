@@ -1,5 +1,5 @@
-@extends('templates.layout')
-@section('content')
+{{-- @extends('templates.layout')
+@section('content') --}}
     
 
 <!DOCTYPE html>
@@ -9,14 +9,303 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Register</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     {{-- <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha384-oHB4kV3F3Quc6xXSRmDe8uLTZbswS+EXogEq4W5bdhoHvl3Z4K6j08DVCn5b6A1g" crossorigin="anonymous"></script> --}}
     <!-- import CDN CSS Bootstrap -->
     {{-- <link href="https://cdn.jsdelivr.net/npm/fastbootstrap@2.2.0/dist/css/fastbootstrap.min.css" rel="stylesheet" integrity="sha256-V6lu+OdYNKTKTsVFBuQsyIlDiRWiOmtC8VQ8Lzdm2i4=" crossorigin="anonymous"> --}}
     <style>
-        .btn-primary {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(45deg, red, black);
+        }
+
+        .container {
+            position: relative;
+            width: 850px;
+            height: 550px;
+            background: #fff;
+            border-radius: 30px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, .2);  
+            margin: 20px;
+            overflow: hidden;
+        }
+
+        .form-box {
+            position: absolute;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            color: #333;
+            text-align: center;
+            padding: 40px;
+            z-index: 1;
+            transition: .6s ease-in-out 1.2s, visibility 0s 1s;
+        }
+
+        .container.active .form-box {
+            right: 50%;
+        }
+
+        .form-box.register {
+            visibility: hidden;
+
+        }
+
+        .container.active .form-box.register {
+            visibility: visible;
+        }
+
+        form {
+            width: 100%;
+        }
+
+        .container h1 {
+            font-size: 36px;
+            margin: -10px 0;
+        }
+
+        .input-box {
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 13px 50px 13px 20px;
+            background: #eee;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .input-box input::placeholder {
+            color: #888;
+            font-weight: 400;
+        }
+
+        .input-box i {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #888;
+        }
+
+        .forgot-link {
+            margin: -15px 0 15px;
+        }
+
+        .forgot-link a {
+            font-size: 14.5px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .btn {
+            width: 100%;
+            height: 48px;
+            background:  #8b0000;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .container p {
+            font-size: 14.5px;
+            margin: 15px 0;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 24px;
+            color: #333;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+
+        .toggle-box {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            /* background: palevioletred; */
+        }
+
+        .toggle-box::before {
+            content: '';
+            position: absolute;
+            left: -250%;
+            width: 300%;
+            height: 100%;
+            background:  linear-gradient(45deg, #ff0000, #8b0000, #000000);
+            animation: neonBackground 7s ease infinite; 
+            border-radius: 150px;
+            z-index: 2;
+            transition: 1.8s ease-in-out;
+        }
+
+        @keyframes neonBackground {
+        0% {
+            background-position: 0% 50%;
+            /* color: #ff0000 */
+            
+        }
+        50% {
+            background-position: 100% 50%;
+            /* color: #8b0000 */
+        }
+        100% {
+            background-position: 0% 50%;
+            /* color: #000000 */
+        }
+        /* animation {
+            background: 2s ease infinite;
+        } */
+    }
+
+        .container.active .toggle-box::before {
+            left: 50%;
+        }
+
+        .toggle-panel {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            transition: .6s ease-in-out;
+        }
+
+        .toggle-panel.toggle-left {
+            left: 0;
+            transition-delay: 1.2s;
+        }
+
+        .container.active .toggle-panel.toggle-left {
+            left: -50%;
+            transition-delay: .6s;
+        }
+
+        .toggle-panel.toggle-right {
+            right: -50%;
+            transition-delay: .6s;
+        }
+
+        .container.active .toggle-panel.toggle-right {
+            right: 0;
+            transition-delay: 1.2s;
+        }
+
+        .toggle-panel p {
+            margin-bottom: 20px;
+        }
+
+        .toggle-panel .btn {
+            width: 160px;
+            height: 46px;
+            background: transparent;
+            border: 2px solid #fff;
+            box-shadow: none;
+        }
+
+        @media screen and (max-width: 650px) {
+            .container {
+                height: calc(100vh - 40px);
+            }
+
+            .form-box {
+                bottom: 0;
+                width: 100%;
+                height: 70%;
+            }
+
+            .container.active .form-box {
+                right: 0;
+                bottom: 30%;
+                border-radius: 20vw;
+            }
+
+            .toggle-box::before {
+                left: 0;
+                top: -270%;
+                width: 100%;
+                height: 300%;
+            }
+
+            .container.active .toggle-box::before {
+                left: 0;
+                top: 70%;
+            }
+
+            .toggle-panel {
+                width: 100%;
+                height: 30%;
+            }
+
+            .toggle-panel.toggle-left {
+                top: 0;
+            }
+
+            .container.active .toggle-panel.toggle-left {
+                left: 0;
+                top: -30%;
+            }
+
+            .toggle-panel.toggle-right {
+                right: 0;
+                bottom: -30%;
+            }
+
+            .container.active .toggle-panel.toggle-right {
+                bottom: 0;
+            }
+        }
+
+        @media screen and (max-width: 400px) {
+            .form-box {
+                padding: 20px;
+            }
+
+            .toggle-panel h1 {
+                font-size: 30px;
+            }
+        }
+
+        /* .btn-primary {
             color: #ffffff;
             text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-            background-color: #229ac8;
+            background-color:  #23a1d1;
             background-image: linear-gradient(to bottom, #23a1d1, #1f90bb);
             background-repeat: repeat-x;
             border-color: #1f90bb #1f90bb #145e7a;
@@ -30,7 +319,7 @@
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05);
         }
 
-        /* style.css */
+       
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -63,17 +352,17 @@
         .breadcrumb ul li a {
             text-decoration: none;
             color: #23a1d1;;
-            padding: 4px 15px; /* Sesuaikan padding agar navbar lebih tinggi */
+            padding: 4px 15px;
             display: inline-block;
         }
 
         .breadcrumb ul li:not(:last-child)::after {
             content: "";
             position: absolute;
-            right: -10px; /* Geser panah ke kanan */
+            right: -10px; 
             top: 0;
             bottom: 0;
-            width: 5px; /* Lebar panah */
+            width: 5px;
             background: linear-gradient(to right, rgba(255, 255, 255, 0), #ddd);
             height: 100%;
             transform: skewX(-45deg);
@@ -82,12 +371,12 @@
 
         .breadcrumb ul li a:hover {
             text-decoration: underline;
-        }
+        } */
 
     </style>
 </head>
 <body>
-    <div class="container mt-2">
+    {{-- <div class="container mt-2">
     <nav class="breadcrumb navbar navbar-expand-lg" style="background-color: #f5f5f5; border-radius: 10px;">
         <ul>
             <li><a href="{{ route('home')}}"><span class="icon">🏠</span></a></li>
@@ -95,13 +384,20 @@
             <li><a href="{{ route('register')}}" style="font-size:15px">Register</a></li>
         </ul>
     </nav>
-</div>
-    <div class="container mt-4">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8">
-            <form action="{{ route('registrasi')}}" method="POST">
+</div> --}}
+    {{-- <div class="container mt-4">
+    <div class="container"> --}}
+        <div class="container" style="animation: neonBackground 7s ease infinite">
+            <div class="form-box login">
+            <form action="{{ route('loginAuth')}}" method="POST">
             @csrf
+            
+            @if (Session::get('success'))
+            <div class="alert alert-success" id="alert-user">
+            {{ Session::get('success') }}
+            </div>
+            @endif
+        
             @if($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -111,7 +407,26 @@
                 </ul>
             </div>
             @endif
-                <h1>Register Account</h1>
+
+            <h1>Login</h1>
+            <div class="input-box">
+                <input type="email" name="email" id="email" placeholder="Email" required>
+                <i class='bx bxs-envelope' ></i>
+            </div>
+            <div class="input-box">
+                <input type="password" name="password" placeholder="Password">
+                <i class='bx bxs-lock-alt' ></i>
+            </div>
+            <div class="forgot-link">
+                <a href="">Lupa password?</a>
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <p>Login  Google</p>
+            <div class="social-icons">
+                <a href=""><i class='bx bxl-google' ></i></a>
+            </div>
+
+                {{-- <h1>Register Account</h1>
                 <p>If you already have an account with us, please login at the <span style="color: #23a1d1;">login page</span>.</p>
                 <br>
                 <h4>Your Personal Details</h4>
@@ -233,107 +548,97 @@
                             <button type="submit" class="btn btn-primary" >Continue</button>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </form>
             </div>
-            <div class="col-md-4">
-                <div class="card" style="width: 18rem;">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Login</li>
-                        <li class="list-group-item">Register</li>
-                        <li class="list-group-item">Forgotten Password</li>
-                        <li class="list-group-item">My Account</li>
-                        <li class="list-group-item">Address Books</li>
-                        <li class="list-group-item">Wish List</li>
-                        <li class="list-group-item">Order History</li>
-                        <li class="list-group-item">Downloads</li>
-                        <li class="list-group-item">Reward Points</li>
-                        <li class="list-group-item">Returns</li>
-                        <li class="list-group-item">Transactions</li>
-                        <li class="list-group-item">Newsletter</li>
-                        <li class="list-group-item">Recurring payments</li>
-                    </ul>
+            
+            <div class="form-box register">
+                <form action="{{ route('registrasi')}}" method="POST">
+                    @csrf
+                    @if($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
+        
+                    <h1>Registration</h1>
+                    <div class="input-box">
+                        <input type="text" name="name" placeholder="Name" required>
+                        <i class='bx bxs-user' ></i>
+                    </div>
+                    <div class="input-box">
+                        <input type="email" name="email" id="email" placeholder="Email" required>
+                        <i class='bx bxs-envelope' ></i>
+                    </div>
+                    <div class="input-box">
+                        <input type="password" name="password" placeholder="Password">
+                        <i class='bx bxs-lock-alt' ></i>
+                    </div>
+                    <div class="input-box">
+                        <input type="password" name="password_confirmation" placeholder="Confirm Password">
+                        <i class='bx bxs-lock'></i>
+                    </div>
+                    <button type="submit" class="btn">Register</button>
+                    <p>or register with Google</p>
+                    <div class="social-icons">
+                        <a href=""><i class='bx bxl-google' ></i></a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="toggle-box">
+                <div class="toggle-panel toggle-left">
+                    <h1>Hello, Welcome!</h1>
+                    <p>Don't have an account?</p>
+                    <button class="btn register-btn">Register</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Welcome Back!</h1>
+                    <p>Already have an account?</p>
+                    <button class="btn login-btn">Login</button>
                 </div>
             </div>
         </div>
-    </div>
-</div>  
+    {{-- </div> --}}
+{{-- </div>   --}}
 </body>
 </html>
-@endsection
+{{-- @endsection --}}
+{{-- <div class="col-md-4">
+    <div class="card" style="width: 18rem;">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Login</li>
+            <li class="list-group-item">Register</li>
+            <li class="list-group-item">Forgotten Password</li>
+            <li class="list-group-item">My Account</li>
+            <li class="list-group-item">Address Books</li>
+            <li class="list-group-item">Wish List</li>
+            <li class="list-group-item">Order History</li>
+            <li class="list-group-item">Downloads</li>
+            <li class="list-group-item">Reward Points</li>
+            <li class="list-group-item">Returns</li>
+            <li class="list-group-item">Transactions</li>
+            <li class="list-group-item">Newsletter</li>
+            <li class="list-group-item">Recurring payments</li>
+        </ul>
+    </div>
+</div> --}}
+  {{-- @push('script') --}}
+      <script>
+        const container = document.querySelector('.container');
+        const registerBtn = document.querySelector('.register-btn');
+        const loginBtn = document.querySelector('.login-btn');
 
-    @push('script')
-    <script>
-
-// $(document).ready(function() {
-//             if ($("#toast").length) {
-//                 var toast = new bootstrap.Toast(document.getElementById('toast'));
-//                 toast.show();
-//             }
-
-//             $.ajax({
-//         method: "GET",
-//         url: "https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json",
-//         dataType: "json",
-//         success: function(response) {
-//             response.forEach(function(province) {
-//                 $('#province').append('<option value="' + province.id + '" data-name="' + province.name + '">' + province.name + '</option>');
-//             });
-//         },
-//         error: function() {
-//             alert("Gagal memuat data provinsi!");
-//         }
-//     });
-// });
-
-
-        
-    $(document).ready(function() {
-        
-        const countriesApi = "https://restcountries.com/v3.1/all";
-        const regionsApi = "https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json";
-
-        $.ajax({
-            url: countriesApi,
-            method: "GET",
-            dataType: "json",
-            success: function(countries) {
-                countries.forEach(country => {
-                    $('#country').append(
-                        `<option value="${country.cca2}">${country.name.common}</option>`
-                    );
-                });
-            },
-            error: function(xhr, status, error) {
-                console.error("Error fetching countries:", error);
-                alert("Gagal memuat data negara!");
-            }
+        registerBtn.addEventListener('click', () => {
+            container.classList.add('active');
         });
 
-        $('#country').on('change', function() {
-            const countryId = $(this).val();
-
-            if (countryId) {
-                $('#province').empty().append('<option value="">--- Please Select---</option>');
-
-                $.ajax({
-                method: "GET",
-                url: regionsApi,
-                dataType: "json",
-                success: function(response) {
-                    response.forEach(function(province) {
-                        $('#province').append('<option value="' + province.id + '" data-name="' + province.name + '">' + province.name + '</option>');
-                    });
-                },
-                error: function() {
-                    alert("Gagal memuat data provinsi!");
-                }
-    });
-            } else {
-                $('#province').empty().append('<option value="">--- Please Select---</option>');
-            }
+        loginBtn.addEventListener('click', () => {
+            container.classList.remove('active');
         });
-    });
-
-        </script>
-    @endpush
+      </script>
+  {{-- @endpush --}}

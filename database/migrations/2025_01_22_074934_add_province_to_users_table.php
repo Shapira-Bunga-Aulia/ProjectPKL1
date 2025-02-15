@@ -20,9 +20,12 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down()
-    {
-        Schema::table('users', function (Blueprint $table) {
+{
+    Schema::table('users', function (Blueprint $table) {
+        if (Schema::hasColumn('users', 'province')) {
             $table->dropColumn('province');
-        });
-    }
+        }
+    });
+}
+
 };

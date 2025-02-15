@@ -71,7 +71,7 @@ body {
 
 .breadcrumb ul li a {
     text-decoration: none;
-    color: #23a1d1;;
+    color: #23a1d1;
     padding: 4px 15px; /* Sesuaikan padding agar navbar lebih tinggi */
     display: inline-block;
 }

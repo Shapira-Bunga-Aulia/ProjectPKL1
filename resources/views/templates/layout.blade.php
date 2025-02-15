@@ -56,7 +56,7 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#"><i class="fa-solid fa-heart"></i> Wish List ()</a>
+                        <a class="nav-link active" aria-current="page" href="{{ route('wishlist')}}"><i class="fa-solid fa-heart"></i> Wish List ()</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('shopping')}}"><i class="fa-solid fa-cart-shopping"></i> Shopping Cart</a>

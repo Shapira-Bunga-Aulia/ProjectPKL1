@@ -83,6 +83,39 @@ body {
 .breadcrumb ul li a:hover {
     text-decoration: underline;
 }
+
+/* Styling untuk gambar pengiriman */
+.shipping-img {
+    margin-top: 5px;
+    margin-left: 3px;
+    width: 60px; /* Ukuran gambar lebih kecil */
+    height: auto; /* Menjaga proporsi gambar */
+    border-radius: 8px; /* Sudut melengkung */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Efek bayangan */
+    transition: transform 0.3s ease; /* Transisi animasi saat hover */
+}
+
+.payment-img {
+    margin-top: 9px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    width: 50px; /* Ukuran gambar lebih kecil */
+    height: auto; /* Menjaga proporsi gambar */
+    border-radius: 8px; /* Sudut melengkung */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Efek bayangan */
+    transition: transform 0.3s ease; /* Transisi animasi saat hover */
+}
+
+/* Efek hover pada gambar */
+.shipping-img:hover {
+    transform: scale(1.05); /* Membesarkan sedikit gambar saat hover */
+}
+
+
+/* .img {
+         margin: 0 40px;
+         size: 5px
+     } */
     </style>
 </head>
 <body>
@@ -93,6 +126,13 @@ body {
                 <li><a href="{{ route('co')}}"style="font-size:15px">Checkout</a></li>
             </ul>
         </nav>
+
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+        
+
     </div>
     <div class="container mt-5">
         <h1>Checkout</h1>
@@ -100,40 +140,46 @@ body {
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button" type="button" data-toggle="collapse" data-target="#checkoutStep1" aria-expanded="true" aria-controls="checkoutStep1">
-                Step 1: Checkout Options
+                Step 1: Opsi Pembayaran
             </button>
         </h2>
         <div id="checkoutStep1" class="accordion-collapse collapse show" data-parent="#checkoutAccordion">
             <div class="accordion-body">
                 <div class="card">
-                    <div class="card-body d-flex justify-content-between">
-                        <div class="new-customer w-50 me-3">
-                            <h4>New Customer</h4>
-                            <form>
-                                <p>Checkout Options:</p>
-                                <input type="radio" id="register" name="register" value="register">
-                                <label for="register">Register Account</label><br>
-                                <input type="radio" id="guest" name="checkout" value="guest">
-                                <label for="guest">Guest Checkout</label><br>
-                                <br>
-                            </form>
-                            <p>
-                                By creating an account you will be able to shop faster, be up to date on an order's
-                                status, and keep track of the orders you have previously made.
-                            </p>
-                            <button type="button" class="btn btn-primary">Continue</button>
-                        </div>
-                        <div class="returning-customer w-50">
-                            <h4>Returning Customer</h4>
-                            <p>I am a returning customer</p>
-                            <form>
-                                <label for="email">E-Mail</label><br>
-                                <input type="email" id="email" name="email" class="form-control mb-2" placeholder="E-Mail"><br>
-                                <label for="password">Password</label><br>
-                                <input type="password" id="password" name="password" class="form-control mb-2" placeholder="Password"><br>
-                                <a href="#" class="text-primary">Forgotten Password</a><br>
-                                <button type="button" class="btn btn-primary mt-2">Login</button>
-                            </form>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Pelanggan Baru</h5>
+                                        <p class="card-text"><b>Daftar Akun</b></p>
+                                        <p class="card-text">                               
+                                            Dengan membuat akun, Anda akan dapat berbelanja lebih cepat, mengetahui status pesanan, dan melacak pesanan yang telah Anda buat sebelumnya.
+                                        </p>
+                                        <a href="{{ route('register') }}" class="btn btn-dark">Continue</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <form action="{{ route('loginAuth')}}" method="POST">
+                                        @csrf
+                                        <h5 class="card-title">Sudah Punya Akun?</h5>
+                                        <p class="card-text"><b>Masukkan Email dan Password Anda</b></p>
+                                        <label for="email">E-Mail Address</label>
+                                        <input type="email" name="email" id="email" class="form-control" placeholder="E-Mail Address">
+                                        <br>
+                                        <label for="password">Password</label>
+                                        <input type="password" name="password" id="password" class="form-control" placeholder="Password">
+                                        <label for="password"><span style="color:#23a1d1;">Lupa Password?</span></label>
+                                        <br><br>
+                                        {{-- <a href="{{ route('home')}}" class="btn btn-dark">Login</a> --}}
+                                        <button type="submit" class="btn btn-dark continue-btn" data-next="#checkoutStep2">Continue</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -145,131 +191,94 @@ body {
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button" type="button" data-toggle="collapse" data-target="#checkoutStep2" aria-expanded="false" aria-controls="checkoutStep2">
-                Step 2: Account & Billing Details
+                Step 2: Rincian Alamat
             </button>
         </h2>
         <div id="checkoutStep2" class="accordion-collapse collapse" data-parent="#checkoutAccordion">
             <div class="accordion-body">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row">
-                            <!-- Your Personal Details -->
-                            <div class="col-md-6">
-                                <legend>Your Personal Details</legend>
+                                <legend>Your Address Details</legend>
                                 <hr>
+                            <form action="{{ route('address')}}" method="POST">
+                                @csrf
+            
+                                    @if (Session::get('success'))
+                                    <div class="alert alert-success" id="alert-user">
+                                    {{ Session::get('success') }}
+                                    </div>
+                                    @endif
+                                
+                                    @if($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                    @endif
                                 <div class="row mb-3">
-                                    <label for="firstname"><span style="color: red">* </span>First Name</label>
+                                    <label for="recipient_name"><span style="color: red">* </span>Nama Penerima</label>
                                     <div class="col-12">
-                                        <input name="firstname" id="firstname" class="form-control" placeholder="First Name"></input>
+                                        <input name="recipient_name" id="recipient_name" class="form-control" placeholder="Masukkan nama penerima"></input>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="lastname"><span style="color: red">* </span>Last Name</label>
+                                    <label for="phone_number"><span style="color: red">* </span>Nomor Telepon</label>
                                     <div class="col-12">
-                                        <input name="lastname" id="lastname" class="form-control" placeholder="Last Name"></input>
+                                        <input name="phone_number" id="phone_number" class="form-control" placeholder="Nomor Telepon"></input>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
-                                    <label for="email"><span style="color: red">* </span>E-Mail</label>
+                                    <label for="address1"><span style="color: red">* </span>Alamat 1</label>
                                     <div class="col-12">
-                                        <input type="email" name="email" id="email" class="form-control" placeholder="E-Mail"></input>
+                                        <input type="text" name="address1" id="address1" class="form-control" placeholder="Alamat 1" required>
                                     </div>
                                 </div>
+                                
                                 <div class="row mb-3">
-                                    <label for="telephone"><span style="color: red">* </span>Telephone</label>
+                                    <label for="address2">Alamat 2</label>
                                     <div class="col-12">
-                                        <input name="telephone" id="telephone" class="form-control" placeholder="Telephone"></input>
+                                        <input type="text" name="address2" id="address2" class="form-control" placeholder="Alamat 2">
                                     </div>
                                 </div>
+                                
                                 <div class="row mb-3">
-                                    <label for="fax">Fax</label>
+                                    <label for="postcode"><span style="color: red">* </span>Kode Pos</label>
                                     <div class="col-12">
-                                        <input name="fax" id="fax" class="form-control" placeholder="Fax"></input>
+                                        <input name="postcode" id="postcode" class="form-control" placeholder="Kode Pos"></input>
                                     </div>
                                 </div>
-                                <!-- Your Password -->
-                                <legend>Your Password</legend>
-                                <hr>
-                                <div class="row mb-3">
-                                    <label for="password"><span style="color: red">* </span>Password</label>
-                                    <div class="col-md-12">
-                                        <input name="password" id="password" class="form-control" placeholder="Password"></input>
-                                    </div>
+                                <div class="mb-3">
+                                    <label for="province" class="form-label"><span style="color: red">* </span>Provinsi</label>
+                                    <select name="province" id="province" class="form-select">
+                                        <option value="">Pilih Provinsi</option>
+                                    </select>
                                 </div>
-                                <div class="row mb-3">
-                                    <label for="passwordconfirm"><span style="color: red">* </span>Password Confirm</label>
-                                    <div class="col-md-12">
-                                        <input type="password" name="passwordconfirm" id="passwordconfirm" class="form-control" placeholder="Password Confirm"></input>
-                                    </div>
+                
+                                <div class="mb-3">
+                                    <label for="regency" class="form-label"><span style="color: red">* </span>Kabupaten / Kota</label>
+                                    <select name="regency" id="regency" class="form-select">
+                                        <option value="">Pilih Kabupaten / Kota</option>
+                                    </select>
                                 </div>
-                            </div>
-                            
-                            <!-- Your Address -->
-                            <div class="col-md-6">
-                                <legend>Your Address</legend>
-                                <hr>
-                                <div class="row mb-3">
-                                    <label for="company">Company</label>
-                                    <div class="col-12">
-                                        <input name="company" id="company" class="form-control" placeholder="Company"></input>
-                                    </div>
+                
+                                <div class="mb-3">
+                                    <label for="subdistrict" class="form-label"><span style="color: red">* </span>Kecamatan</label>
+                                    <select name="subdistrict" id="subdistrict" class="form-select">
+                                        <option value="">Pilih Kecamatan</option>
+                                    </select>
                                 </div>
-                                <div class="row mb-3">
-                                    <label for="address1"><span style="color: red">* </span>Address 1</label>
-                                    <div class="col-12">
-                                        <input name="address1" id="address1" class="form-control" placeholder="Address 1"></input>
-                                    </div>
+                
+                                <div class="mb-3">
+                                    <label for="village" class="form-label"><span style="color: red">* </span>Desa / Kelurahan</label>
+                                    <select name="village" id="village" class="form-select">
+                                        <option value="">Pilih Desa / Kelurahan</option>
+                                    </select>
                                 </div>
-                                <div class="row mb-3">
-                                    <label for="address2">Address 2</label>
-                                    <div class="col-12">
-                                        <input name="address2" id="address2" class="form-control" placeholder="Address 2"></input>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="city"><span style="color: red">* </span>City</label>
-                                    <div class="col-12">
-                                        <input name="city" id="city" class="form-control" placeholder="City"></input>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="postcode">Post Code</label>
-                                    <div class="col-12">
-                                        <input name="postcode" id="postcode" class="form-control" placeholder="Post Code"></input>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="country"><span style="color: red">* </span>Country</label>
-                                    <div class="col-12">
-                                        <select name="country" id="country" class="form-control">
-                                            <option value="">--- Please Select---</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <label for="region"><span style="color: red">* </span>Region / State</label>
-                                    <div class="col-12">
-                                        <select name="region" id="region" class="form-control">
-                                            <option value="">--- Please Select---</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <form action="/action_page.php">
-                            <input type="checkbox" id="cbox1" name="cbox1" value="">
-                            <label for="cbox1"> I wish to subscribe to the BSM Multimedia newsletter.</label><br>
-                            <input type="checkbox" id="cbox2" name="cbox2" value="">
-                            <label for="cbox2"> My delivery and billing addresses are the same.</label><br>
-                            
-                            <div class="row mb-3">
-                                <div class="col-md-12 d-flex justify-content-end align-items-center">
-                                    <input type="checkbox" id="agreement" name="agreement" class="me-2">
-                                    <label for="agreement" class="me-3"> I have read and agree to the <span style="color: #23a1d1;">Support Project</span></label>
-                                    <button type="button" class="btn btn-primary">Continue</button>
-                                </div>
-                            </div>
-                        </form>                        
+                                <button type="submit" class="btn btn-dark continue-btn" data-next="#checkoutStep3">Continue</button>
+                    </form>
                 </div>
              </div>                
         </div>
@@ -280,79 +289,195 @@ body {
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-toggle="collapse" data-target="#checkoutStep3" aria-expanded="false" aria-controls="checkoutStep3">
-                Step 3: Delivery Details
+                Step 3: Rincian Pengiriman
             </button>
         </h2>
         <div id="checkoutStep3" class="accordion-collapse collapse" data-parent="#checkoutAccordion">
             <div class="accordion-body">
                 <form>
-                    <input type="radio" id="register" name="checkout" value="register">
-                    <label for="register">I want to use an existing address</label><br>
+                    <!-- Pilihan alamat yang sudah ada -->
+                    <input type="radio" id="register" name="checkout" value="register" onclick="toggleSelection('existing')">
+                    <label for="register">Saya ingin menggunakan alamat yang sudah ada</label><br>
+                    
+                    <!-- Dropdown daftar alamat -->
+                    {{-- <select name="address" id="address">
+                        <option value="">Pilih Alamat</option>
+                        @foreach ($addresses as $address)
+                        <option value="{{ $address->id }}">
+                        {{ $address->number}}, {{ $address->village }}, {{$address->subdistrict }}, {{ $address->regency }}, {{$address->province }}, {{ $address->postcode}}
+                        </option>
+                        @endforeach
+                    </select> --}}
+                    {{-- @if(isset($addresses) && $addresses->isNotEmpty())
                     <select name="address" id="address">
-                        <option value="Select Option">select option</option>
+                        <option value="">Pilih Alamat</option>
+                        @foreach ($addresses as $address)
+                            <option value="{{ $address->id }}">
+                                {{ $address->number }}, {{ $address->village }}, {{ $address->subdistrict }}, 
+                                {{ $address->regency }}, {{ $address->province }}, {{ $address->postcode }}
+                            </option>
+                        @endforeach
                     </select>
+                    @else
+                        <p>Tidak ada alamat tersedia</p>
+                    @endif --}}
+                    @if(isset($addresses) && $addresses->isNotEmpty())
+                        <select name="address" id="address">
+                            <option value="">Pilih Alamat</option>
+                            @foreach ($addresses as $address)
+                                <optgroup label="Alamat 1">
+                                    <option value="{{ $address->id }}">
+                                        {{ $address->address1 }},
+                                        {{ json_decode($address->village)->name }},
+                                        {{ json_decode($address->subdistrict)->name }},
+                                        {{ json_decode($address->regency)->name }},
+                                        {{ json_decode($address->province)->name }},
+                                        {{ $address->postcode }}
+                                    </option>
+                                </optgroup>
+
+                                    @if($address->address2)
+                                    <optgroup label="Alamat 2">
+                                        <option value="{{ $address->id }}">
+                                            {{ $address->address2 }},
+                                            {{ json_decode($address->village)->name }},
+                                            {{ json_decode($address->subdistrict)->name }},
+                                            {{ json_decode($address->regency)->name }},
+                                            {{ json_decode($address->province)->name }},
+                                            {{ $address->postcode }}
+                                        </option>
+                                    @endif
+                                </optgroup>
+                            @endforeach
+                        </select>
+                    @endif                
                     <br>
-                    <input type="radio" id="addres1" name="addres1" value="">
-                    <label for="newaddress">I want to use a new address</label><br>
-                    <div class="container mt-4">
+                    <br>
+    
+                    <!-- Button Continue untuk alamat yang sudah ada -->
+                    <div id="continue-button" style="display: none;">
+                        <button type="submit" class="btn btn-dark continue-btn" data-next="#checkoutStep4">Continue</button>
+                    </div>
+                    <br>
+                
+                    <!-- Pilihan alamat baru -->
+                    <input type="radio" id="newaddress" name="checkout" value="new" onclick="toggleSelection('new')">
+                    <label for="newaddress">Saya ingin menggunakan alamat baru</label><br>
+                
+                    <!-- Form alamat baru -->
+                    <div id="newAddressFields" class="container mt-4" style="display: none;">
                         <div class="row mb-3">
-                            <label for="firstname"><span style="color: red">* </span>First Name</label>
-                            <div class="col-md-8">
-                                <input name="firstname" id="firstname" class="form-control" placeholder="First Name"></input>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="lastname"><span style="color: red">* </span>Last Name</label>
+                            <label for="recipient_name"><span style="color: red">* </span>Nama Penerima</label>
                             <div class="col-12">
-                                <input name="lastname" id="lastname" class="form-control" placeholder="Last Name"></input>
+                                <input name="recipient_name" id="recipient_name" class="form-control" placeholder="Masukkan nama penerima">
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="company">Company</label>
+                            <label for="telephone"><span style="color: red">* </span>Nomor Telepon</label>
                             <div class="col-12">
-                                <input name="company" id="company" class="form-control" placeholder="Company"></input>
+                                <input name="telephone" id="telephone" class="form-control" placeholder="Nomor Telepon">
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="address1"><span style="color: red">* </span>Address 1</label>
+                            <label for="address1"><span style="color: red">* </span>Alamat 1</label>
                             <div class="col-12">
-                                <input name="address1" id="address1" class="form-control" placeholder="Address 1"></input>
+                                <input name="address1" id="address1" class="form-control" placeholder="Alamat 1">
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="address2">Address 2</label>
+                            <label for="kodepos"><span style="color: red">* </span>Kode Pos</label>
                             <div class="col-12">
-                                <input name="address2" id="address2" class="form-control" placeholder="Address 2"></input>
+                                <input name="kodepos" id="kodepos" class="form-control" placeholder="Kode Pos">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="province" class="form-label">Provinsi</label>
+                            <select name="province" class="province" class="form-select">
+                                <option value="">Pilih Provinsi</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="regency" class="form-label">Kabupaten / Kota</label>
+                            <select name="regency" class="regency" class="form-select">
+                                <option value="">Pilih Kabupaten / Kota</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subdistrict" class="form-label">Kecamatan</label>
+                            <select name="subdistrict" class="subdistrict" class="form-select">
+                                <option value="">Pilih Kecamatan</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="village" class="form-label">Desa</label>
+                            <select name="village" class="village" class="form-select">
+                                <option value="">Pilih Desa / Kelurahan</option>
+                            </select>
+                        </div>
+
+                        {{-- <div class="row mb-3">
+                            <label for="recipient_name"><span style="color: red">* </span>Nama Penerima</label>
+                            <div class="col-12">
+                                <input name="recipient_name" id="recipient_name" class="form-control" placeholder="Masukkan nama penerima"></input>
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="city"><span style="color: red">* </span>City</label>
+                            <label for="phone_number"><span style="color: red">* </span>Nomor Telepon</label>
                             <div class="col-12">
-                                <input name="city" id="city" class="form-control" placeholder="City"></input>
+                                <input name="phone_number" id="phone_number" class="form-control" placeholder="Nomor Telepon"></input>
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="postcode">Post Code</label>
+                            <label for="address1"><span style="color: red">* </span>Alamat</label>
                             <div class="col-12">
-                                <input name="postcode" id="postcode" class="form-control" placeholder="Post Code"></input>
+                                <input type="text" name="address1" id="address1" class="form-control" placeholder="Alamat 1" required>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <label for="country"><span style="color: red">* </span>Country</label>
+                         --}}
+                        {{-- <div class="row mb-3">
+                            <label for="address2">Alamat 2</label>
                             <div class="col-12">
-                                <select name="country" id="country" class="form-control">
-                                    <option value="">--- Please Select---</option>
-                                </select>
+                                <input type="text" name="address2" id="address2" class="form-control" placeholder="Alamat 2">
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <label for="region"><span style="color: red">* </span>Region / State</label>
+                         --}}
+                        {{-- <div class="row mb-3">
+                            <label for="postcode"><span style="color: red">* </span>Kode Pos</label>
                             <div class="col-12">
-                                <select name="region" id="region" class="form-control">
-                                    <option value="">--- Please Select---</option>
-                                </select>
+                                <input name="postcode" id="postcode" class="form-control" placeholder="Kode Pos"></input>
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <label for="province" class="form-label"><span style="color: red">* </span>Provinsi</label>
+                            <select name="province" id="province" class="form-select">
+                                <option value="">Pilih Provinsi</option>
+                            </select>
+                        </div>
+        
+                        <div class="mb-3">
+                            <label for="regency" class="form-label"><span style="color: red">* </span>Kabupaten / Kota</label>
+                            <select name="regency" id="regency" class="form-select">
+                                <option value="">Pilih Kabupaten / Kota</option>
+                            </select>
+                        </div>
+        
+                        <div class="mb-3">
+                            <label for="subdistrict" class="form-label"><span style="color: red">* </span>Kecamatan</label>
+                            <select name="subdistrict" id="subdistrict" class="form-select">
+                                <option value="">Pilih Kecamatan</option>
+                            </select>
+                        </div>
+        
+                        <div class="mb-3">
+                            <label for="village" class="form-label"><span style="color: red">* </span>Desa / Kelurahan</label>
+                            <select name="village" id="village" class="form-select">
+                                <option value="">Pilih Desa / Kelurahan</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-dark continue-btn" data-next="#checkoutStep4">Continue</button> --}}
+                
+                        <!-- Button Continue untuk alamat baru -->
+                        <button type="submit" class="btn btn-dark continue-btn" data-next="#checkoutStep4">Continue</button>
                     </div>
                 </form>
             </div>
@@ -363,20 +488,75 @@ body {
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-toggle="collapse" data-target="#checkoutStep4" aria-expanded="false" aria-controls="checkoutStep4">
-                Step 4: Delivery Method
+                Step 4: Metode Pengiriman
             </button>
         </h2>
         <div id="checkoutStep4" class="accordion-collapse collapse show" data-parent="#checkoutAccordion">
         <div class="card">
             <div class="card-body">
-                <p>Please select the preferred shipping method to use on this order.</p>
-                <p><b>Flat Rate</b></p>
-                <input type="radio" id="flat" name="flat" value="">
-                <label for="flat"> Flat Shipping Rate - Rp. 5/Day</label><br>
+                {{-- <p>Silakan pilih metode pengiriman yang diinginkan untuk digunakan pada pesanan ini.</p>
+                <p><b>Flat Rate</b></p> --}}
+
+                {{-- @if($shippingMethods->count() > 0) --}}
+                {{-- <form action="{{ route('shipping.store') }}" method="POST">
+                    @csrf
+                    <p>Silakan pilih metode pengiriman yang diinginkan untuk digunakan pada pesanan ini.</p>
+
+                    <select name="shipping_method" class="form-control">
+                        <option value="">-- Pilih Metode Pengiriman --</option>
+                        @foreach ($shippingMethods as $method)
+                            <option value="{{ $method->id }}">
+                                {{ $method->name }} - Rp{{ number_format($method->cost) }} ({{ $method->estimated_days }} hari)
+                            </option>
+                        @endforeach
+                    </select>
+                </form> --}}
+            {{-- @else
+                <p>Tidak ada metode pengiriman yang tersedia.</p>
+            @endif --}}
+
+                {{-- <form action="{{ route('shipping.store') }}" method="POST">
+                    @csrf
+                    <p>Silakan pilih metode pengiriman yang diinginkan untuk digunakan pada pesanan ini.</p>
+                
+                    <select name="shipping_method" class="form-control">
+                        <option value="">-- Pilih Metode Pengiriman --</option>
+                        @foreach ($shippingMethods as $method)
+                            <option value="{{ $method->id }}">
+                                {{ $method->name }} - Rp{{ number_format($method->cost) }} ({{ $method->estimated_days }} hari)
+                            </option>
+                        @endforeach
+                    </select>
+                
+                    <br>
+                    <label for="coment"><b>Catatan:</b></label> <br>
+                    <textarea name="coment" id="coment" cols="15" rows="8" class="form-control"></textarea> <br>
+                
+                    <button type="submit" class="btn btn-dark continue-btn">Continue</button>
+                </form> --}}
+                
+
+                <form action="{{ route('shipping.store')}}" method="POST">
+                    @csrf
+                    <p>Silakan pilih metode pengiriman yang diinginkan untuk digunakan pada pesanan ini.</p>
+                
+                    <input type="radio" id="jnt" name="name" value="jnt">
+                    <label for="jnt">
+                        <img src="{{ asset('img/jnt.jpg')}}" class="shipping-img">
+                    </label><br>
+                    <br>
+                    <input type="radio" id="jne" name="name" value="jne">
+                    <label for="jne">
+                        <img src="{{ asset('img/jne.jpg')}}" class="shipping-img">
+                    </label><br>
+                
                 <br>
-                <label for="coment"><b>Add Comments About Your Order</b></label> <br>
-                <textarea name="coment" id="coment" cols="15" rows="8" class="form-control"></textarea> <br>
-                <button type="button" class="btn btn-primary">Continue</button>
+                {{-- <label for="coment"><b>Catatan:</b></label> <br>
+                <textarea name="coment" id="coment" cols="15" rows="8" class="form-control"></textarea> <br> --}}
+                <button type="submit" class="btn btn-dark continue-btn" data-next="#checkoutStep5">Continue</button>
+            </form>
+
+
             </div>
         </div>
     </div>
@@ -385,35 +565,94 @@ body {
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-toggle="collapse" data-target="#checkoutStep5" aria-expanded="false" aria-controls="checkoutStep5">
-                Step 5: Delivery Method
+                Step 5: Metode Pembayaran
             </button>
         </h2>
-        <div id="checkoutStep5" class="accordion-collapse collapse show" data-parent="#checkoutAccordion">
+        <div id="checkoutStep5" class="accordiyon-collapse collapse show" data-parent="#checkoutAccordion">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{{ route('payment.store')}}" method="POST">
+                        @csrf
+                        <p>Silakan pilih metode pembayaran yang ingin digunakan pada pesanan ini.</p>
+        
+                        <!-- Pilihan Transfer Bank -->
+                        <div>
+                            <input type="radio" id="transfer" name="name" value="transfer">
+                            <label for="transfer">
+                                <img src="{{ asset('img/m-banking.png')}}" class="payment-img">
+                                Transfer Bank
+                            </label>
+                        </div>
+        
+                        <!-- Detail Transfer Bank (Hidden by Default) -->
+                        <div id="transferDetails" style="display: none; margin-top: 10px;">
+                            <p><b>Nomor Rekening:</b> 1234-5678-9012 (Bank XYZ)</p>
+                            <label for="buktiPembayaran"><b>Upload Bukti Pembayaran:</b></label>
+                            <input type="file" id="buktiPembayaran" name="bukti" class="form-control">
+                        </div>
+        
+                        <!-- Pilihan COD -->
+                        <div>
+                            <input type="radio" id="cod" name="name" value="cod">
+                            <label for="cod">
+                                <img src="{{ asset('img/cod.png')}}" class="payment-img">
+                                Cash On Delivery
+                            </label>
+                        </div>
+                    
+        
+                    <br>
+                    {{-- <label for="coment"><b>Catatan</b></label> <br>
+                    <textarea name="coment" id="coment" cols="15" rows="8" class="form-control"></textarea> <br> --}}
+        
+                    <div class="row mb-3">
+                        <div class="col-md-12 d-flex justify-content-end align-items-center">
+                            <button type="submit" class="btn btn-dark continue-btn" data-next="#checkoutStep6">Continue</button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+        {{-- <div id="checkoutStep5" class="accordiyon-collapse collapse show" data-parent="#checkoutAccordion">
         <div class="card">
             <div class="card-body">
-                <p>Please select the preferred payment method to use on this order.</p>
-                <input type="radio" id="payment" name="payment" value="">
-                <label for="payment"> Cash On Delivery</label><br>
+               
+                <form action="/action_page.php">
+                    <p>Silakan pilih metode pembayaran yang ingin digunakan pada pesanan ini.</p>
+                    <input type="radio" id="transfer" name="fav_language" value="transfer">
+                    <label for="transfer">
+                       
+                        <img src="{{ asset('img/transfer.png')}}" class="payment-img">
+                        Transfer Bank
+                    </label><br>
+                    <br>
+                
+                    <input type="radio" id="cod" name="fav_language" value="cod">
+                    <label for="cod">
+                        
+                        <img src="{{ asset('img/cod.png')}}" class="payment-img">
+                        Cash On Delivery
+                    </label><br>
+                </form>
                 <br>
-                <label for="coment"><b>Add Comments About Your Order</b></label> <br>
+                <label for="coment"><b>Catatan</b></label> <br>
                 <textarea name="coment" id="coment" cols="15" rows="8" class="form-control"></textarea> <br>
                 <div class="row mb-3">
                     <div class="col-md-12 d-flex justify-content-end align-items-center">
-                        <input type="checkbox" id="agreement" name="agreement" class="me-2">
-                        <label for="agreement" class="me-3"> I have read and agree to the <span style="color: #23a1d1;">Support Project</span></label>
-                        <button type="button" class="btn btn-primary">Continue</button>
+                        <button type="button" class="btn btn-dark continue-btn" data-next="#checkoutStep6">Continue</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 
     {{-- accordion 6 --}}
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-toggle="collapse" data-target="#checkoutStep6" aria-expanded="false" aria-controls="checkoutStep6">
-                Step 6: Confirm Order
+                Step 6: Konfirmasi Pesanan
             </button>
         </h2>
         <div id="checkoutStep6" class="accordion-collapse collapse show" data-parent="#checkoutAccordion">
@@ -422,10 +661,10 @@ body {
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
-                                <th scope="col">Product Name</th>
+                                <th scope="col">Nama Produk</th>
                                 <th scope="col">Model</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Unit Price</th>
+                                <th scope="col">Kuantitas</th>
+                                <th scope="col">Harga Satuan</th>
                                 <th scope="col">Total</th>
                             </tr>
                         </thead>
@@ -447,15 +686,465 @@ body {
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary">Confirm Order</button>
+                            <button type="button" class="btn btn-dark">Confirm Order</button>
                             </div>
                         </div>  
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 </body>
 </html>
 @endsection
+
+@push('script')
+    <script>
+          $(document).ready(function() {
+            if ($("#toast").length) {
+                var toast = new bootstrap.Toast(document.getElementById('toast'));
+                toast.show();
+            }
+
+            $.ajax({
+        method: "GET",
+        url: "https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json",
+        dataType: "json",
+        success: function(response) {
+            response.forEach(function(province) {
+                $('#province').append('<option value="' + province.id + '" data-name="' + province.name + '">' + province.name + '</option>');
+            });
+        },
+        error: function() {
+            alert("Gagal memuat data provinsi!");
+        }
+    });
+
+    // Enable regency when province is selected
+    $('#province').on('change', function() {
+        let provinceId = $(this).val();
+        let provinceName = $('#province option:selected').data('name');
+        if (provinceId) {
+            $('#regency').prop('disabled', false).html('<option value="" disabled selected hidden>Loading...</option>');
+            $('#subdistrict, #village').prop('disabled', true).html('<option value="" disabled selected hidden>Pilih Kecamatan/Desa</option>');
+            $.ajax({
+                method: "GET",
+                url: `https:www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json`,
+                dataType: "json",
+                success: function(response) {
+                    $('#regency').html('<option value="" disabled selected hidden>Pilih Kabupaten</option>');
+                    response.forEach(function(regency) {
+                        $('#regency').append('<option value="' + regency.id + '" data-name="' + regency.name + '">' + regency.name + '</option>');
+                    });
+                },
+                error: function() {
+                    alert("Gagal memuat data kabupaten!");
+                }
+            });
+        }
+    });
+
+    // Enable subdistrict when regency is selected
+    $('#regency').on('change', function() {
+        let regencyId = $(this).val();
+        let regencyName = $('#regency option:selected').data('name');
+        if (regencyId) {
+            $('#subdistrict').prop('disabled', false).html('<option value="" disabled selected hidden>Loading...</option>');
+            $('#village').prop('disabled', true).html('<option value="" disabled selected hidden>Pilih Desa</option>');
+            $.ajax({
+                method: "GET",
+                url: `https:www.emsifa.com/api-wilayah-indonesia/api/districts/${regencyId}.json`,
+                dataType: "json",
+                success: function(response) {
+                    $('#subdistrict').html('<option value="" disabled selected hidden>Pilih Kecamatan</option>');
+                    response.forEach(function(subdistrict) {
+                        $('#subdistrict').append('<option value="' + subdistrict.id + '" data-name="' + subdistrict.name + '">' + subdistrict.name + '</option>');
+                    });
+                },
+                error: function() {
+                    alert("Gagal memuat data kecamatan!");
+                }
+            });
+        }
+    });
+
+    // Enable village when subdistrict is selected
+    $('#subdistrict').on('change', function() {
+        let subdistrictId = $(this).val();
+        let subdistrictName = $('#subdistrict option:selected').data('name');
+        if (subdistrictId) {
+            $('#village').prop('disabled', false).html('<option value="" disabled selected hidden>Loading...</option>');
+            $.ajax({
+                method: "GET",
+                url: `https:www.emsifa.com/api-wilayah-indonesia/api/villages/${subdistrictId}.json`,
+                dataType: "json",
+                success: function(response) {
+                    $('#village').html('<option value="" disabled selected hidden>Pilih Desa</option>');
+                    response.forEach(function(village) {
+                        $('#village').append('<option value="' + village.id + '" data-name="' + village.name + '">' + village.name + '</option>');
+                    });
+                },
+                error: function() {
+                    alert("Gagal memuat data desa!");
+                }
+            });
+        }
+    });
+
+    // When form is submitted, collect ID and Name of selected items
+    $('form').on('submit', function(e) {
+        e.preventDefault();  // Prevent form from submitting immediately
+
+        let province = JSON.stringify({
+            id: $('#province').val(),
+            name: $('#province option:selected').data('name')
+        });
+        let regency = JSON.stringify({
+            id: $('#regency').val(),
+            name: $('#regency option:selected').data('name')
+        });
+        let subdistrict = JSON.stringify({
+            id: $('#subdistrict').val(),
+            name: $('#subdistrict option:selected').data('name')
+        });
+        let village = JSON.stringify({
+            id: $('#village').val(),
+            name: $('#village option:selected').data('name')
+        });
+
+        // Add the values to hidden inputs in the form (you can create hidden inputs for these fields)
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'province',
+            value: province
+        }).appendTo('form');
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'regency',
+            value: regency
+        }).appendTo('form');
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'subdistrict',
+            value: subdistrict
+        }).appendTo('form');
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'village',
+            value: village
+        }).appendTo('form');
+
+        // Submit the form
+        this.submit();
+    });
+        });
+    //     $(document).ready(function() {
+    //         if ($("#toast").length) {
+    //             var toast = new bootstrap.Toast(document.getElementById('toast'));
+    //             toast.show();
+    //         }
+
+    //         $.ajax({
+    //     method: "GET",
+    //     url: "https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json",
+    //     dataType: "json",
+    //     success: function(response) {
+    //         response.forEach(function(province) {
+    //             $('#province').append('<option value="' + province.id + '" data-name="'
+    //              + province.name + '">' + province.name + '</option>');
+    //         });
+    //     },
+    //     error: function() {           
+    //         alert("Gagal memuat data provinsi!");
+    //     }
+    // });
+
+    // // Enable regency when province is selected
+    // $('#province').on('change', function() {
+    //     let provinceId = $(this).val();
+    //     let provinceName = $('#province option:selected').data('name');
+    //     if (provinceId) {
+    //         $('#regency').prop('disabled', false).html('<option value="" disabled selected hidden>Loading...</option>');
+    //         $('#subdistrict, #village').prop('disabled', true).html('<option value="" disabled selected hidden>Pilih Kecamatan</option>');
+    //         $.ajax({
+    //             method: "GET",
+    //             url: `https:www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json`,
+    //             dataType: "json",
+    //             success: function(response) {
+    //                 $('#regency').html('<option value="" disabled selected hidden>Pilih Kabupaten</option>');
+    //                 response.forEach(function(regency) {
+    //                     $('#regency').append('<option value="' + regency.id + '" data-name="' + regency.name + '">' + regency.name + '</option>');
+    //                 });
+    //             },
+    //             error: function() {
+    //                 alert("Gagal memuat data kabupaten!");
+    //             }
+    //         });
+    //     }
+    // });
+
+    // // Enable subdistrict when regency is selected
+    // $('#regency').on('change', function() {
+    //     let regencyId = $(this).val();
+    //     let regencyName = $('#regency option:selected').data('name');
+    //     if (regencyId) {
+    //         $('#subdistrict').prop('disabled', false).html('<option value="" disabled selected hidden>Loading...</option>');
+    //         $('#village').prop('disabled', true).html('<option value="" disabled selected hidden>Pilih Desa</option>');
+    //         $.ajax({
+    //             method: "GET",
+    //             url: `https:www.emsifa.com/api-wilayah-indonesia/api/districts/${regencyId}.json`,
+    //             dataType: "json",
+    //             success: function(response) {
+    //                 $('#subdistrict').html('<option value="" disabled selected hidden>Pilih Kecamatan</option>');
+    //                 response.forEach(function(subdistrict) {
+    //                     $('#subdistrict').append('<option value="' + subdistrict.id + '" data-name="' + subdistrict.name + '">' + subdistrict.name + '</option>');
+    //                 });
+    //             },
+    //             error: function() {
+    //                 alert("Gagal memuat data kecamatan!");
+    //             }
+    //         });
+    //     }
+    // });
+
+    // // Enable village when subdistrict is selected
+    // $('#subdistrict').on('change', function() {
+    //     let subdistrictId = $(this).val();
+    //     let subdistrictName = $('#subdistrict option:selected').data('name');
+    //     if (subdistrictId) {
+    //         $('#village').prop('disabled', false).html('<option value="" disabled selected hidden>Loading...</option>');
+    //         $.ajax({
+    //             method: "GET",
+    //             url: `https:www.emsifa.com/api-wilayah-indonesia/api/villages/${subdistrictId}.json`,
+    //             dataType: "json",
+    //             success: function(response) {
+    //                 $('#village').html('<option value="" disabled selected hidden>Pilih Desa/Kelurahan</option>');
+    //                 response.forEach(function(village) {
+    //                     $('#village').append('<option value="' + village.id + '" data-name="' + village.name + '">' + village.name + '</option>');
+    //                 });
+    //             },
+    //             error: function() {
+    //                 alert("Gagal memuat data desa!");
+    //             }
+    //         });
+    //     }
+    // });
+
+    // // new
+    // $.ajax({
+    //     method: "GET",
+    //     url: "https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json",
+    //     dataType: "json",
+    //     success: function(response) {
+    //         response.forEach(function(province) {
+    //             $('#new_province').append('<option value="' + province.id + '" data-name="'
+    //              + province.name + '">' + province.name + '</option>');
+    //         });
+    //     },
+    //     error: function() {           
+    //         alert("Gagal memuat data provinsi!");
+    //     }
+    // });
+
+    // // Enable regency when province is selected
+    // $('#new_province').on('change', function() {
+    //     let provinceId = $(this).val();
+    //     let provinceName = $('#new_province option:selected').data('name');
+    //     if (provinceId) {
+    //         $('#new_regency').prop('disabled', false).html('<option value="" disabled selected hidden>Loading...</option>');
+    //         $('#new_subdistrict, #new_village').prop('disabled', true).html('<option value="" disabled selected hidden>Pilih Kecamatan</option>');
+    //         $.ajax({
+    //             method: "GET",
+    //             url: `https:www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json`,
+    //             dataType: "json",
+    //             success: function(response) {
+    //                 $('#new_regency').html('<option value="" disabled selected hidden>Pilih Kabupaten</option>');
+    //                 response.forEach(function(regency) {
+    //                     $('#new_regency').append('<option value="' + regency.id + '" data-name="' + regency.name + '">' + regency.name + '</option>');
+    //                 });
+    //             },
+    //             error: function() {
+    //                 alert("Gagal memuat data kabupaten!");
+    //             }
+    //         });
+    //     }
+    // });
+
+    // // Enable subdistrict when regency is selected
+    // $('#new_regency').on('change', function() {
+    //     let regencyId = $(this).val();
+    //     let regencyName = $('#new_regency option:selected').data('name');
+    //     if (regencyId) {
+    //         $('#new_subdistrict').prop('disabled', false).html('<option value="" disabled selected hidden>Loading...</option>');
+    //         $('#new_village').prop('disabled', true).html('<option value="" disabled selected hidden>Pilih Desa/Kelurahan</option>');
+    //         $.ajax({
+    //             method: "GET",
+    //             url: `https:www.emsifa.com/api-wilayah-indonesia/api/districts/${regencyId}.json`,
+    //             dataType: "json",
+    //             success: function(response) {
+    //                 $('#new_subdistrict').html('<option value="" disabled selected hidden>Pilih Kecamatan</option>');
+    //                 response.forEach(function(subdistrict) {
+    //                     $('#new_subdistrict').append('<option value="' + subdistrict.id + '" data-name="' + subdistrict.name + '">' + subdistrict.name + '</option>');
+    //                 });
+    //             },
+    //             error: function() {
+    //                 alert("Gagal memuat data kecamatan!");
+    //             }
+    //         });
+    //     }
+    // });
+
+    // // Enable village when subdistrict is selected
+    // $('#new_subdistrict').on('change', function() {
+    //     let subdistrictId = $(this).val();
+    //     let subdistrictName = $('#new_subdistrict option:selected').data('name');
+    //     if (subdistrictId) {
+    //         $('#new_village').prop('disabled', false).html('<option value="" disabled selected hidden>Loading...</option>');
+    //         $.ajax({
+    //             method: "GET",
+    //             url: `https:www.emsifa.com/api-wilayah-indonesia/api/villages/${subdistrictId}.json`,
+    //             dataType: "json",
+    //             success: function(response) {
+    //                 $('#new_village').html('<option value="" disabled selected hidden>Pilih Desa</option>');
+    //                 response.forEach(function(village) {
+    //                     $('#new_village').append('<option value="' + village.id + '" data-name="' + village.name + '">' + village.name + '</option>');
+    //                 });
+    //             },
+    //             error: function() {
+    //                 alert("Gagal memuat data desa!");
+    //             }
+    //         });
+    //     }
+    // });
+
+    // When form is submitted, collect ID and Name of selected items
+    // $('form').on('submit', function(e) {
+    //     e.preventDefault();  // Prevent form from submitting immediately
+
+    //     let oldprovince = JSON.stringify({
+    //         id: $('#province').val(),
+    //         name: $('#province option:selected').data('name')
+    //     });
+    //     let oldregency = JSON.stringify({
+    //         id: $('#regency').val(),
+    //         name: $('#regency option:selected').data('name')
+    //     });
+    //     let oldsubdistrict = JSON.stringify({
+    //         id: $('#subdistrict').val(),
+    //         name: $('#subdistrict option:selected').data('name')
+    //     });
+    //     let oldvillage = JSON.stringify({
+    //         id: $('#village').val(),
+    //         name: $('#village option:selected').data('name')
+    //     });
+
+    //     let newprovince = JSON.stringify({
+    //         id: $('#new_province').val(),
+    //         name: $('#new_province option:selected').data('name')
+    //     });
+    //     let newregency = JSON.stringify({
+    //         id: $('#new_regency').val(),
+    //         name: $('#new_regency option:selected').data('name')
+    //     });
+    //     let newsubdistrict = JSON.stringify({
+    //         id: $('#new_subdistrict').val(),
+    //         name: $('#new_subdistrict option:selected').data('name')
+    //     });
+    //     let newvillage = JSON.stringify({
+    //         id: $('#new_village').val(),
+    //         name: $('#new_village option:selected').data('name')
+    //     });
+
+    //     // Add the values to hidden inputs in the form (you can create hidden inputs for these fields)
+    //     $('<input>').attr({
+    //         type: 'hidden',
+    //         name: 'province',
+    //         value: province
+    //     }).appendTo('form');
+    //     $('<input>').attr({
+    //         type: 'hidden',
+    //         name: 'regency',
+    //         value: regency
+    //     }).appendTo('form');
+    //     $('<input>').attr({
+    //         type: 'hidden',
+    //         name: 'subdistrict',
+    //         value: subdistrict
+    //     }).appendTo('form');
+    //     $('<input>').attr({
+    //         type: 'hidden',
+    //         name: 'village',
+    //         value: village
+    //     }).appendTo('form');
+
+    //     // Submit the form
+    //     this.submit();
+    // });
+    //     });
+
+        function toggleAddress(showNew) {
+        document.getElementById('newAddressFields').style.display = showNew ? 'block' : 'none';
+    }
+
+    function toggleButton(show) {
+        const continueButton = document.getElementById("continue-button");
+        if (show) {
+            continueButton.style.display = "block";
+        } else {
+            continueButton.style.display = "none";
+        }
+    }
+
+    function toggleSelection(type) {
+        const continueButton = document.getElementById("continue-button");
+        const newAddressFields = document.getElementById("newAddressFields");
+
+        if (type === 'existing') {
+            continueButton.style.display = "block"; // Tampilkan tombol continue pertama
+            newAddressFields.style.display = "none"; // Sembunyikan form alamat baru
+        } else if (type === 'new') {
+            continueButton.style.display = "none"; // Sembunyikan tombol continue pertama
+            newAddressFields.style.display = "block"; // Tampilkan form alamat baru
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const continueButtons = document.querySelectorAll(".continue-btn");
+
+        continueButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                let nextStep = document.querySelector(this.getAttribute("data-next"));
+
+                if (nextStep) {
+                    // Tutup semua accordion terlebih dahulu
+                    document.querySelectorAll(".accordion-collapse").forEach(section => {
+                        section.classList.remove("show");
+                    });
+
+                    // Buka step berikutnya
+                    nextStep.classList.add("show");
+                }
+            });
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+    const transferRadio = document.getElementById("transfer");
+    const codRadio = document.getElementById("cod");
+    const transferDetails = document.getElementById("transferDetails");
+
+    transferRadio.addEventListener("change", function() {
+        if (this.checked) {
+            transferDetails.style.display = "block";
+            transferRadio.parentNode.insertAdjacentElement("afterend", transferDetails);
+        }
+    });
+
+    codRadio.addEventListener("change", function() {
+        if (this.checked) {
+            transferDetails.style.display = "none";
+        }
+    });
+});
+    </script>
+@endpush

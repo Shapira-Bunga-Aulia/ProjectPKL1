@@ -23,17 +23,18 @@ class RegisterController extends Controller
     {
         // Validasi input pengguna
         $validator = Validator::make($request->all(), [
-            'firstname' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
+            // 'firstname' => 'required|string|max:255',
+            // 'lastname' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'telephone' => 'required|numeric',
-            'fax' => 'nullable|numeric',
-            'address1' => 'required|string|max:255',
-            'address2' => 'nullable|string|max:255',
-            'city' => 'required|string|max:255',
-            'postcode' => 'nullable|string|max:20',
-            'country' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
+            // 'telephone' => 'required|numeric',
+            // 'fax' => 'nullable|numeric',
+            // 'address1' => 'required|string|max:255',
+            // 'address2' => 'nullable|string|max:255',
+            // 'city' => 'required|string|max:255',
+            // 'postcode' => 'nullable|string|max:20',
+            // 'country' => 'required|string|max:255',
+            // 'province' => 'required|string|max:255',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
@@ -44,22 +45,23 @@ class RegisterController extends Controller
 
         // Menyimpan data pengguna ke dalam database
         $user = new User();
-        $user->firstname = $request->firstname;
-        $user->lastname = $request->lastname;
+        // $user->firstname = $request->firstname;
+        // $user->lastname = $request->lastname;
+        $user->name = $request->name;
         $user->email = $request->email;
-        $user->telephone = $request->telephone;
-        $user->fax = $request->fax;
-        $user->address1 = $request->address1;
-        $user->address2 = $request->address2;
-        $user->city = $request->city;
-        $user->postcode = $request->postcode;
-        $user->country = $request->country;
-        $user->province = $request->province;
+        // $user->telephone = $request->telephone;
+        // $user->fax = $request->fax;
+        // $user->address1 = $request->address1;
+        // $user->address2 = $request->address2;
+        // $user->city = $request->city;
+        // $user->postcode = $request->postcode;
+        // $user->country = $request->country;
+        // $user->province = $request->province;
         $user->password = Hash::make($request->password);
         $user->save();
 
         // Redirect ke halaman login atau halaman lainnya setelah berhasil registrasi
-        return redirect()->route('login')->with('success', 'Registration successful. Please login.');
+        return redirect()->back()->with('success', 'Registrasi Berhasil, silahkan login terlebih dahulu.');
     }
 
     /**

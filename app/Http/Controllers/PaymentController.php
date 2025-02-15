@@ -3,34 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\cr;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 
-class LoginController extends Controller
+class PaymentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-
-     public function loginAuth(Request $request)
-     {
-         $request->validate([
-             'email' => 'required|email',
-             'password' => 'required'
-         ]);
-     
-         $credentials = $request->only(['email', 'password']);
-     
-         if (Auth::attempt($credentials)) {
-             return redirect()->route('home')->with('success', 'Login berhasil!');
-         } else {
-             return redirect()->back()->with('failed', 'Email atau password salah, silakan coba lagi.');
-         }
-     }
-     
     public function index()
     {
-        return view('register');
+        return view ('checkout');
     }
 
     /**
@@ -38,7 +21,7 @@ class LoginController extends Controller
      */
     public function create()
     {
-        //
+        return view ('checkout');
     }
 
     /**
@@ -46,7 +29,19 @@ class LoginController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string',
+            'nomor' => 'nullable',
+            'bukti' => 'required|string',
+        ]);
+
+        Payment::create([
+            'name' => $request->name,
+            'nomor' =>$request->nomor,
+            'bukti' => $request->bukti,
+        ]);
+
+        return redirect()->route('payment.store')->with('success', 'Payment berhasil');
     }
 
     /**
