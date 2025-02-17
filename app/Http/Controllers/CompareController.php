@@ -11,5 +11,6 @@ class CompareController extends Controller
     {
         // Kirimkan data produk untuk dibandingkan (jika ada)
         return view('compare');
-    }   
+    } 
+    
 }
