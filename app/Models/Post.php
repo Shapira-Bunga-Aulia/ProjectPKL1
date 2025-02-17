@@ -24,5 +24,10 @@ class Post extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
 }
 

@@ -12,12 +12,25 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-        $posts = Post::all();  // Mengambil semua produk dari database
-        return view('home', compact('posts')); // Mengirim data produk ke view home
+    public function index(Request $request)
+{
+    // Mendapatkan kata kunci pencarian dari input pengguna
+    $search = $request->input('search');
+
+    // Jika ada kata kunci pencarian, filter berdasarkan judul atau konten
+    if ($search) {
+        $posts = Post::where('nameproduct', 'like', '%' . $search . '%')
+             ->orWhere('description', 'like', '%' . $search . '%')
+             ->get();
+    } else {
+        // Jika tidak ada kata kunci, ambil semua post
+        $posts = Post::all();
     }
+
+    // Mengirim data post ke view 'home' bersama dengan kata kunci pencarian
+    return view('home', compact('posts', 'search'));
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -71,7 +84,7 @@ class PostController extends Controller
     ]);
 
     // Redirect ke halaman lain setelah data disimpan
-    return redirect()->route('posts.create')->with('success', 'Product created successfully!')->with('product', $post);
+    return redirect()->route('home')->with('success', 'Product created successfully!')->with('product', $post);
 }
 
 public function storeComment(Request $request, $postId)
@@ -156,6 +169,60 @@ public function storeComment(Request $request, $postId)
         $posts = Post::all();
 
         return view('home', compact('posts'));
+    }
+
+    public function addToCompare($id)
+    {
+        $post = Post::find($id);
+    if (!$post) {
+        return redirect()->back()->with('error', 'Produk tidak ditemukan');
+    }
+
+    $compare = session()->get('compare', []);
+
+    // Batasi jumlah produk yang dibandingkan maksimal 4
+    if (count($compare) >= 4) {
+        return redirect()->back()->with('error', 'Anda hanya dapat membandingkan hingga 4 produk.');
+    }
+
+    // Cegah duplikasi produk
+    if (!in_array($id, array_column($compare, 'id'))) {
+        $compare[] = [
+            'id' => $post->id,
+            'nameproduct' => $post->nameproduct,
+            'image' => $post->image,
+            'price' => $post->price,
+            'namebrand' => $post->namebrand,
+            'availability' => $post->availability,
+            'description' => $post->description,
+        ];
+    }
+
+    session()->put('compare', $compare);
+
+        return redirect()->route('home')->with('success', route('compare'));
+    }
+
+    public function compare()
+    {
+        // Ambil data dari sesi
+        $compare = session()->get('compare', []);
+    
+        return view('compare', compact('compare'));
+    }
+    
+    
+    public function removeFromCompare($id)
+    {
+        $compare = session()->get('compare', []);
+
+        // Filter produk yang tidak sesuai dengan ID yang dihapus
+        $compare = array_filter($compare, function ($item) use ($id) {
+            return $item['id'] != $id;
+        });
+
+         session()->put('compare', $compare);  
+        return redirect()->route('compare')->with('success', 'Produk dihapus dari perbandingan');
     }
 
 }
