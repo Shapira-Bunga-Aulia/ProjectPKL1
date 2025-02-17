@@ -369,7 +369,7 @@ body {
                         <div class="row mb-3">
                             <label for="recipient_name"><span style="color: red">* </span>Nama Penerima</label>
                             <div class="col-12">
-                                <input name="recipient_name" id="recipient_name" class="form-control" placeholder="Masukkan nama penerima">
+                                <input name="recipient_name" id="new_recipient_name" class="form-control" placeholder="Masukkan nama penerima">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -381,7 +381,7 @@ body {
                         <div class="row mb-3">
                             <label for="address1"><span style="color: red">* </span>Alamat 1</label>
                             <div class="col-12">
-                                <input name="address1" id="address1" class="form-control" placeholder="Alamat 1">
+                                <input name="address1" id="new_address" class="form-control" placeholder="Alamat 1">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -391,26 +391,26 @@ body {
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="province" class="form-label">Provinsi</label>
-                            <select name="province" class="province" class="form-select">
+                            <label for="new_province" class="form-label">Provinsi</label>
+                            <select name="new_province" id="new_province" class="form-select">
                                 <option value="">Pilih Provinsi</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="regency" class="form-label">Kabupaten / Kota</label>
-                            <select name="regency" class="regency" class="form-select">
+                            <label for="new_regency" class="form-label">Kabupaten / Kota</label>
+                            <select name="new_regency" id="new_regency" class="form-select">
                                 <option value="">Pilih Kabupaten / Kota</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="subdistrict" class="form-label">Kecamatan</label>
-                            <select name="subdistrict" class="subdistrict" class="form-select">
+                            <label for="new_subdistrict" class="form-label">Kecamatan</label>
+                            <select name="new_subdistrict" id="new_subdistrict" class="form-select">
                                 <option value="">Pilih Kecamatan</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="village" class="form-label">Desa</label>
-                            <select name="village" class="village" class="form-select">
+                            <label for="new_village" class="form-label">Desa</label>
+                            <select name="new_village" id="new_village" class="form-select">
                                 <option value="">Pilih Desa / Kelurahan</option>
                             </select>
                         </div>
@@ -791,6 +791,91 @@ body {
         }
     });
 
+    $.ajax({
+        method: "GET",
+        url: "https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json",
+        dataType: "json",
+        success: function(response) {
+            response.forEach(function(new_province) {
+                $('#new_provinceId').append('<option value="' + new_province.id + '" data-name="' + new_province.name + '">' + new_province.name + '</option>');
+            });
+        },
+        error: function() {
+            alert("Gagal memuat data provinsi!");
+        }
+    });
+
+    // Enable regency when province is selected
+    $('#new_provinceId').on('change', function() {
+        let new_provinceId = $(this).val();
+        let new_provinceName = $('#new_provinceId option:selected').data('name');
+        if (new_provinceId) {
+            $('#new_regencyId').prop('disabled', false).html('<option value="" disabled selected hidden>Loading...</option>');
+            $('#new_subdistrictId, #new_villageId').prop('disabled', true).html('<option value="" disabled selected hidden>Pilih Kecamatan/Desa</option>');
+            $.ajax({
+                method: "GET",
+                url: `https:www.emsifa.com/api-wilayah-indonesia/api/regencies/${new_provinceId}.json`,
+                dataType: "json",
+                success: function(response) {
+                    $('#new_regencyId').html('<option value="" disabled selected hidden>Pilih Kabupaten</option>');
+                    response.forEach(function(new_regency) {
+                        $('#new_regencyId').append('<option value="' + new_regency.id + '" data-name="' + new_regency.name + '">' + new_regency.name + '</option>');
+                    });
+                },
+                error: function() {
+                    alert("Gagal memuat data kabupaten!");
+                }
+            });
+        }
+    });
+
+    // Enable subdistrict when regency is selected
+    $('#new_regencyId').on('change', function() {
+        let new_regencyId = $(this).val();
+        let new_regencyName = $('#new_regencyId option:selected').data('name');
+        if (new_regencyId) {
+            $('#new_subdistrictId').prop('disabled', false).html('<option value="" disabled selected hidden>Loading...</option>');
+            $('#new_villageId').prop('disabled', true).html('<option value="" disabled selected hidden>Pilih Desa</option>');
+            $.ajax({
+                method: "GET",
+                url: `https:www.emsifa.com/api-wilayah-indonesia/api/districts/${new_regencyId}.json`,
+                dataType: "json",
+                success: function(response) {
+                    $('#new_subdistrictId').html('<option value="" disabled selected hidden>Pilih Kecamatan</option>');
+                    response.forEach(function(new_subdistrict) {
+                        $('#new_subdistrictId').append('<option value="' + new_subdistrict.id + '" data-name="' + new_subdistrict.name + '">' + new_subdistrict.name + '</option>');
+                    });
+                },
+                error: function() {
+                    alert("Gagal memuat data kecamatan!");
+                }
+            });
+        }
+    });
+
+    // Enable village when subdistrict is selected
+    $('#new_subdistrictId').on('change', function() {
+        let new_subdistrictId = $(this).val();
+        let new_subdistrictName = $('#new_subdistrictId option:selected').data('name');
+        if (new_subdistrictId) {
+            $('#new_villageId').prop('disabled', false).html('<option value="" disabled selected hidden>Loading...</option>');
+            $.ajax({
+                method: "GET",
+                url: `https:www.emsifa.com/api-wilayah-indonesia/api/villages/${new_subdistrictId}.json`,
+                dataType: "json",
+                success: function(response) {
+                    $('#new_villageId').html('<option value="" disabled selected hidden>Pilih Desa</option>');
+                    response.forEach(function(new_village) {
+                        $('#new_villageId').append('<option value="' + new_village.id + '" data-name="' + new_village.name + '">' + new_village.name + '</option>');
+                    });
+                },
+                error: function() {
+                    alert("Gagal memuat data desa!");
+                }
+            });
+        }
+    });
+
     // When form is submitted, collect ID and Name of selected items
     $('form').on('submit', function(e) {
         e.preventDefault();  // Prevent form from submitting immediately
@@ -798,7 +883,7 @@ body {
         let province = JSON.stringify({
             id: $('#province').val(),
             name: $('#province option:selected').data('name')
-        });
+        })
         let regency = JSON.stringify({
             id: $('#regency').val(),
             name: $('#regency option:selected').data('name')
@@ -810,6 +895,23 @@ body {
         let village = JSON.stringify({
             id: $('#village').val(),
             name: $('#village option:selected').data('name')
+        });
+
+        let new_provinceId = JSON.stringify({
+            id: $('#new_provinceId').val(),
+            name: $('#new_provinceId option:selected').data('name')
+        })
+        let new_regencyId = JSON.stringify({
+            id: $('#new_regencyId').val(),
+            name: $('#new_regencyId option:selected').data('name')
+        });
+        let new_subdistrictId = JSON.stringify({
+            id: $('#new_subdistrictId').val(),
+            name: $('#new_subdistrictId option:selected').data('name')
+        });
+        let new_villageId = JSON.stringify({
+            id: $('#new_villageId').val(),
+            name: $('#new_villageId option:selected').data('name')
         });
 
         // Add the values to hidden inputs in the form (you can create hidden inputs for these fields)
@@ -833,6 +935,28 @@ body {
             name: 'village',
             value: village
         }).appendTo('form');
+
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'new_province',
+            value: province
+        }).appendTo('form');
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'new_regency',
+            value: regency
+        }).appendTo('form');
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'new_subdistrict',
+            value: subdistrict
+        }).appendTo('form');
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'new_villageId',
+            value: village
+        }).appendTo('form');
+
 
         // Submit the form
         this.submit();
